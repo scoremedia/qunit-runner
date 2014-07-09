@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'qunit/runner'
+require 'thor'
+
+class QunitRunnerCLI < Thor
+
+  desc "test URL", %{Run a qunit test suite at the specified URL}
+  option :timeout, :type => :numeric, :default => 10000,
+    :description => "Milliseconds to wait before giving up on the test suite"
+
+  def test(url)
+    puts %{Creating embork app in "%s"} % package_name
+    Embork::Generator.new(package_name, options).generate
+  end
+
+  default_task :test
+end
+
+EmborkCLI.start(ARGV)
