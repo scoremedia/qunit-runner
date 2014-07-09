@@ -1,6 +1,6 @@
 # Qunit::Runner
 
-TODO: Write a gem description
+A ruby command line runner for Qunit tests using PhantomJS
 
 ## Installation
 
@@ -18,7 +18,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+qunit-runner \[--timeout=milleseconds\] URL
+
+This will run a test suite located at the provided URL, giving an appropriate
+exit status and displaying test run progress and status.
 
 ## Contributing
 
