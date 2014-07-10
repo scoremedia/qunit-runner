@@ -1,17 +1,14 @@
 module Qunit
   class Logger
+    @print_color = !ENV.has_key?('DISABLE_COLOR')
     class << self
 
-      def initialize
-        @print_color = !ENV.has_key? 'DISABLE_COLOR'
-      end
-
       def print(message, color = nil)
-        print apply_color(message, color)
+        Kernel.print apply_color(message, color)
       end
 
       def puts(message, color = nil)
-        puts apply_color(message, color)
+        Kernel.puts apply_color(message, color)
       end
 
       protected

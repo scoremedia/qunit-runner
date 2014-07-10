@@ -3,10 +3,24 @@ require 'qunit/logger'
 module Qunit
   class Parser
 
+    attr_reader :current_module
+    attr_reader :current_test
+    attr_reader :unfinished_modules
+    attr_reader :failed_assertions
+    attr_reader :total_failed
+    attr_reader :total_passed
+    attr_reader :total
+    attr_reader :duration
     attr_reader :logger
 
     def initialize
       @logger = Qunit::Logger
+      @unfinished_modules = Hash.new
+      @failed_assertions = Array.new
+      @total_failed = 0
+      @total_passed = 0
+      @total = 0
+      @duration = 0
     end
 
     def parse(line)
@@ -38,16 +52,22 @@ module Qunit
       name ||= "Unnamed Module"
       @unfinished_modules[name.to_sym] = true
       @current_module = name
+      # exit status
+      return false, nil
     end
 
     def module_done(name, *args)
       name ||= "Unnamed Module"
       @unfinished_modules.delete(name.to_sym)
+      # exit status
+      return false, nil
     end
 
     def test_start(name)
       prefix = @current_module ? "#{@current_module} - " : ''
       @current_test = "#{prefix}#{name}"
+      # exit status
+      return false, nil
     end
 
     def test_done(name, failed, *args)
@@ -56,6 +76,8 @@ module Qunit
       else
         logger.print '.'
       end
+      # exit status
+      return false, nil
     end
 
     def qunit_log(result, actual, expected, message, source)
@@ -69,6 +91,8 @@ module Qunit
         }
         @failed_assertions.push assertion
       end
+      # exit status
+      return false, nil
     end
 
     def qunit_done(failed, passed, total, duration)
@@ -94,7 +118,14 @@ module Qunit
     end
 
     def console(message)
-      logger.print 'CONSOLE:', :magenta
+      prefix = ''
+      if @current_test
+        prefix << "\n[%s]" % @current_test
+      elsif @current_module
+        prefix << "\n[%s]" % @current_module
+      end
+      prefix << ' CONSOLE: '
+      logger.print prefix, :magenta
       logger.print message
       logger.print "\n"
     end
@@ -120,11 +151,11 @@ module Qunit
       end
       if @total_failed == 0 and @total > 0
         logger.puts "OK", :green
-        @should_exit = true
-        @exit_status = 0
+        # exit status
+        return true, 0
       else
-        @should_exit = true
-        @exit_status = 1
+        # exit status
+        return true, 1
       end
     end
 
