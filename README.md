@@ -23,6 +23,17 @@ qunit-runner \[--timeout=milleseconds\] URL
 This will run a test suite located at the provided URL, giving an appropriate
 exit status and displaying test run progress and status.
 
+## API Usage
+
+You can invoke the test runner from inside your application using the
+`Qunit::Runner` class. Initialize the runner with the test URL, and then run the
+engine, optionally specifying a timeout.
+
+```
+url = "http://localhost:3000"
+Qunit::Runner.new(url).run
+```
+
 ## Contributing
 
 1. Fork it
