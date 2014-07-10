@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-qunit-runner \[--timeout=milleseconds\] URL
+```
+qunit-runner test \[--timeout=milleseconds\] URL
+```
 
 This will run a test suite located at the provided URL, giving an appropriate
 exit status and displaying test run progress and status.
