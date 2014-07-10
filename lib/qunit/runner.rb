@@ -8,29 +8,18 @@ require 'colorize'
 
 module Qunit
   class Runner
-    attr_reader :current_module
-    attr_reader :current_test
-    attr_reader :unfinished_modules
-    attr_reader :failed_assertions
-    attr_reader :total_failed
-    attr_reader :total_passed
-    attr_reader :total
-    attr_reader :duration
     attr_reader :should_exit
     attr_reader :exit_status
     attr_reader :test_url
+    attr_reader :logger
 
     def initialize(url)
       $stdout.sync = true
-      @unfinished_modules = Hash.new
-      @failed_assertions = Array.new
-      @total_failed = 0
-      @total_passed = 0
-      @total = 0
-      @duration = 0
       @should_exit = false
       @exit_status = 0
       @test_url = url
+      @logger = Qunit::Logger
+      @parser = Qunit::Parser.new
     end
 
     def run(load_timeout = 10000)
@@ -53,7 +42,7 @@ module Qunit
         i.close
         begin
           while line = o.gets and !@should_exit
-            parse line
+            @should_exit, @exit_status = @parser.parse line
           end
           safe_kill t.pid
         rescue Exception
@@ -76,7 +65,7 @@ module Qunit
     protected
 
     def print_banner
-      logger.puts "Starting tests at url %" % @test_url
+      logger.puts "Starting tests at url %s" % @test_url
     end
 
   end

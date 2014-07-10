@@ -10,11 +10,10 @@ class QunitRunnerCLI < Thor
     :description => "Milliseconds to wait before giving up on the test suite"
 
   def test(url)
-    puts %{Creating embork app in "%s"} % package_name
-    Embork::Generator.new(package_name, options).generate
+    Qunit::Runner.new(url).run(options[:timeout])
   end
 
   default_task :test
 end
 
-EmborkCLI.start(ARGV)
+QunitRunnerCLI.start(ARGV)
