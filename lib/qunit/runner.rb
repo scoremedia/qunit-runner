@@ -32,6 +32,7 @@ module Qunit
       }
       cmd = Shellwords.join [
         'phantomjs',
+        '--load-images=false',
         phantom_bridge,
         '/dev/stdout',
         @test_url,
@@ -50,7 +51,7 @@ module Qunit
           raise
         end
       end
-      exit @exit_status
+      exit @exit_status || 1
     end
 
     def safe_kill(pid)
