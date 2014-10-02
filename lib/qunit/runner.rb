@@ -34,7 +34,7 @@ module Qunit
         'phantomjs',
         '--load-images=false',
         '--ssl-protocol=TLSv1',
-        '--ignore-ssl-errors',
+        '--ignore-ssl-errors=true',
         phantom_bridge,
         '/dev/stdout',
         @test_url,
