@@ -33,6 +33,8 @@ module Qunit
       cmd = Shellwords.join [
         'phantomjs',
         '--load-images=false',
+        '--ssl-protocol=TLSv1',
+        '--ignore-ssl-errors',
         phantom_bridge,
         '/dev/stdout',
         @test_url,
